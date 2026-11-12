@@ -96,7 +96,7 @@ class TranscribeAnything {
             "--model large-v3"
         ], " ")
         ; msgbox A_Clipboard := cmd
-        proc := Run(cmd, , this.runMode)
+        Run(cmd, , this.runMode, &proc)
         this.activeServers[port][proc] := A_NowUTC
         this.load[port] += 1
     }
