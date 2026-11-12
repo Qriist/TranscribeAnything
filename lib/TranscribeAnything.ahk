@@ -8,6 +8,7 @@ class TranscribeAnything {
         this.portStart := 8765
         this.load := Map()
         this.activeServers := Map()
+        this.launchTime := A_NowUTC
         loop this.serverCap {
             port := this.portStart + (A_Index - 1)
             this.activeServers[port] := Map()
@@ -23,7 +24,7 @@ class TranscribeAnything {
     }
     StartServer(port) {
         bat := this._findBatfromAris()
-        Run('"' bat '" ' port, , , &batpid)
+        Run('"' bat '" ' port " " this.launchTime, , , &batpid)
         this.WaitForConsoleText(batpid, "Uvicorn running on")
         this.activeServers[port].launched := 1
     }
@@ -145,5 +146,33 @@ class TranscribeAnything {
             if sum < (this.serverCap * this.queueCap)
                 return
         }
+    }
+    awaitFinish() {
+        loop {
+            ;count total tracked load
+            sum := 0
+            for k, v in this.load {
+                port := k
+                switch v {
+                    case 0:
+                        if this.activeServers[port].launched
+                            this.closePort(port)
+                    default:
+                        sum += v
+                }
+            }
+
+            ;all port jobs done
+            if !sum
+                break
+
+            this.cullports()
+        }
+    }
+    closePort(port) {
+        WinActivate("TA Server " port " [" this.launchTime "]")
+        WinWaitActive("TA Server " port " [" this.launchTime "]")
+        SendInput("^c")
+        this.activeServers[port].launched := 0
     }
 }
