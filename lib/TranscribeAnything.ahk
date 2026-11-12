@@ -22,11 +22,24 @@ class TranscribeAnything {
         this.HF_TOKEN := HF_TOKEN
     }
     StartServer(port) {
-        bat := A_ScriptDir "\Aris\Qriist\TranscribeAnything\lib\TA server start.bat"
+        bat := this._findBatfromAris()
         Run('"' bat '" ' port, , , &batpid)
         this.WaitForConsoleText(batpid, "Uvicorn running on")
         this.activeServers[port].launched := 1
     }
+    _findBatfromAris() { ;dynamically finds the dll from a versioned Aris installation
+        if DirExist(A_ScriptDir "\lib\Aris\Qriist") ;"top level" install
+            packageDir := A_ScriptDir "\lib\Aris\Qriist"
+        else if DirExist(A_ScriptDir "\..\lib\Aris\Qriist") ;script one level down
+            packageDir := A_ScriptDir "\..\lib\Aris\Qriist"
+        else
+            return ""
+        loop files (packageDir "\TranscribeAnything@*"), "D" {
+            TAdir := packageDir "\" A_LoopFileName
+        }
+        return TAdir "\lib\TA server start.bat"
+    }
+
     WaitForConsoleText(pid, searchText, timeoutMs := 30000, intervalMs := 500) {
         start := A_TickCount
         loop {
