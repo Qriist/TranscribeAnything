@@ -1,0 +1,24 @@
+﻿{
+	"author": {
+		"email": "Qriist+TranscribeAnything@gmail.com",
+		"name": "Qriist",
+		"website": ""
+	},
+	"bugs": {
+		"url": "https://github.com/Qriist/TranscribeAnything/issues"
+	},
+	"dependencies": {
+		"Chunjee/adash": "^v0.7.0"
+	},
+	"description": "simple TA load balancer",
+	"homepage": "",
+	"keywords": [],
+	"license": "",
+	"main": "TranscribeAnything.ahk",
+	"name": "Qriist/TranscribeAnything",
+	"repository": {
+		"type": "github",
+		"url": "Qriist/TranscribeAnything"
+	},
+	"version": "v0.8.0"
+}
